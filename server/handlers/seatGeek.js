@@ -10,7 +10,7 @@ const GetAllEvents = async (req, res) => {
       const response = await axios.get(SEATGEEK_API_URL, {
         params: {
           client_id: clientID,
-          //geoip: true,
+          //cdgeoip: true,
           
         },
       });
