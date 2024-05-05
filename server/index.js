@@ -27,6 +27,10 @@ express()
 
   // Route handler to fetch events from SeatGeek API with Basic Authentication
   .get("/events", seatGeekHandler.GetAllEvents)
+  .get("/eventsNearMe", seatGeekHandler.GetAllEventsNearMe)
+  .get("/performers", seatGeekHandler.GetAllPerformers)
+  .get("/venues", seatGeekHandler.GetAllVenues)
+  .get("/categories", seatGeekHandler.GetAllCategories)
 
   .listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
