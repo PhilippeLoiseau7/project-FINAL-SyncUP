@@ -1,13 +1,16 @@
 const SEATGEEK_API_URL = "https://api.seatgeek.com/2";
-const clientID = "NDEzMDUwNjR8MTcxNDY3Mzc1Ni40MzExMDIz";
-const clientSecret = "e5d71afd2dbd98eabbb13b42a9e6ae825b4e49e9706a4869b41b89d2f9fa2fdb";
+
+require("dotenv").config();
+const { clientID } = process.env;
+const { clientSecret } = process.env;
+const authString = `${clientID}:${clientSecret}`;
+const encodedAuth = Buffer.from(authString).toString("base64");
+
 
 const GetAllEvents = async (req, res) => {
   try {
-    const authString = `${clientID}:${clientSecret}`;
-    const encodedAuth = Buffer.from(authString).toString("base64");
-
-    const response = await fetch(`${SEATGEEK_API_URL}/events`, {
+    const { page = 1, per_page = 15} = req.query;
+    const response = await fetch(`${SEATGEEK_API_URL}/events?page=${page}&per_page=${per_page}`, {
       headers: {
         Authorization: `Basic ${encodedAuth}`
       }
@@ -15,18 +18,17 @@ const GetAllEvents = async (req, res) => {
 
     const data = await response.json();
 
-    res.status(200).json(data);
+    res.status(200).json({ status: 200, events: data.events, meta: data.meta});
   } catch (error) {
     console.error("Error fetching events:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
+
 const GetAllEventsNearMe = async (req, res) => {
   try {
-    const authString = `${clientID}:${clientSecret}`;
-    const encodedAuth = Buffer.from(authString).toString("base64");
-
-    const response = await fetch(`${SEATGEEK_API_URL}/events?geoip=true`, {
+    const { page = 1, per_page = 15} = req.query;
+    const response = await fetch(`${SEATGEEK_API_URL}/events?geoip=true&page=${page}&per_page=${per_page}`, {
       headers: {
         Authorization: `Basic ${encodedAuth}`
       }
@@ -43,8 +45,6 @@ const GetAllEventsNearMe = async (req, res) => {
 
 const GetAllPerformers = async (req, res) => {
   try {
-    const authString = `${clientID}:${clientSecret}`;
-    const encodedAuth = Buffer.from(authString).toString("base64");
 
     const response = await fetch(`${SEATGEEK_API_URL}/performers`, {
       headers: {
@@ -62,8 +62,6 @@ const GetAllPerformers = async (req, res) => {
 }
 const GetAllVenues = async (req, res) => {
   try {
-    const authString = `${clientID}:${clientSecret}`;
-    const encodedAuth = Buffer.from(authString).toString("base64");
 
     const response = await fetch(`${SEATGEEK_API_URL}/venues`, {
       headers: {
@@ -81,8 +79,6 @@ const GetAllVenues = async (req, res) => {
 }
 const GetAllCategories = async (req, res) => {
   try {
-    const authString = `${clientID}:${clientSecret}`;
-    const encodedAuth = Buffer.from(authString).toString("base64");
 
     const response = await fetch(`${SEATGEEK_API_URL}/taxonomies`, {
       headers: {
