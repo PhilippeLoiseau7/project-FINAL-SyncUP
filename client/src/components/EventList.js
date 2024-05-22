@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const EventListings = () => {
+const EventList = () => {
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -75,4 +75,4 @@ const EventListings = () => {
   );
 };
 
-export default EventListings;
+export default EventList;
