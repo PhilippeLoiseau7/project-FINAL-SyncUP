@@ -1,22 +1,24 @@
 import React from "react"
 import styled from "styled-components"
 import { RxHamburgerMenu } from "react-icons/rx";
+import { CgClose } from "react-icons/cg";
 import { GrGroup } from "react-icons/gr";
 
-const Banner = ({ toggleSidebar }) => {
+const Banner = ({ isOpen, toggleSidebar }) => {
 
     return (
 
         <BannerContainer>
             <StyledUnorderedList>
                 <LeftSideBanner>
-                    <li onClick={toggleSidebar}><RxHamburgerMenu /></li>
+                    <li onClick={toggleSidebar}>{isOpen ? <CgClose size={20}/> : <RxHamburgerMenu size={20} /> }</li>
                     <li><span>SyncUp<GrGroup/></span></li>
                 </LeftSideBanner>
                 <RightSideBanner>
                     <li>Theme</li>
                     <li>CA</li>
                     <li>US</li>
+                    <li>Log In</li>
                 </RightSideBanner>
 
             </StyledUnorderedList>
@@ -51,15 +53,17 @@ const StyledUnorderedList = styled.ul`
     margin: 0;
     height: 100%;
     li {
-        span{
-            display: flex;
-            align-items: center;
-            font-size: 30px;
-        }
         display: flex;
         align-items: center;
         margin-left: 20px;  
         cursor: pointer;
+        span{
+            display: flex;
+            align-items: center;
+            font-size: 30px;
+            cursor: default;
+        }
+
     }
 `;
 

@@ -25,6 +25,7 @@ const app = express()
 
   // Handler to fetch events from SeatGeek API
   app.get("/api/events", seatGeekHandler.GetAllEvents)
+  app.get("/api/event/:eventId", seatGeekHandler.GetEvent)
   app.get("/api/eventsNearMe", seatGeekHandler.GetAllEventsNearMe)
   app.get("/api/performers", seatGeekHandler.GetAllPerformers)
   app.get("/api/venues", seatGeekHandler.GetAllVenues)

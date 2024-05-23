@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import EventCard from './EventCard';
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -51,7 +53,7 @@ const EventList = () => {
 
   return (
     <div>
-      <h1>Event Listings</h1>
+      <h1>Events</h1>
       <p>Page {currentPage} of {totalPages}</p>
       <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
         First Page
@@ -66,13 +68,20 @@ const EventList = () => {
       <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
         Last Page
       </button>
-      <ul>
+      <ListContainer>
         {events.map(event => (
-          <li key={event.id}>{event.title}</li>
+          <EventCard key={event.id} event={event} />
         ))}
-      </ul>
+      </ListContainer>
     </div>
   );
 };
+
+const ListContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+`;
 
 export default EventList;

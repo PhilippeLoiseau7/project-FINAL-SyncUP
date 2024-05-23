@@ -25,6 +25,26 @@ const GetAllEvents = async (req, res) => {
   }
 };
 
+const GetEvent = async (req, res) => {
+
+  try {
+    const { eventId} = req.params;
+    const response = await fetch(`${SEATGEEK_API_URL}/events/${eventId}`, {
+      headers: {
+        Authorization: `Basic ${encodedAuth}`
+      }
+    });
+
+    const data = await response.json();
+
+    res.status(200).json({ status: 200, events: data});
+  } catch (error) {
+    console.error("Error fetching event:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+
+}
+}
+
 const GetAllEventsNearMe = async (req, res) => {
   try {
     const { page = 1, per_page = 15} = req.query;
@@ -97,4 +117,4 @@ const GetAllCategories = async (req, res) => {
 
 
 
-module.exports = { GetAllEvents, GetAllEventsNearMe, GetAllPerformers, GetAllVenues, GetAllCategories };
+module.exports = { GetAllEvents, GetEvent, GetAllEventsNearMe, GetAllPerformers, GetAllVenues, GetAllCategories };
