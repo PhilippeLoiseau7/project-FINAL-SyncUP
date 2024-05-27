@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import EventCard from './EventCard';
+import PerformerCard from './PerformerCard';
 
-const EventList = () => {
-  const [events, setEvents] = useState([]);
+const PerformerList = () => {
+  const [performer, setPerformer] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchPerformers = async () => {
       try {
-        const response = await fetch(`/api/events?page=${currentPage}`);
+        const response = await fetch(`/api/performers?page=${currentPage}`);
         const data = await response.json();
-        setEvents(data.events);
+        setPerformer(data.performers);
         setTotalPages(Math.ceil(data.meta.total / data.meta.per_page));
       } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('Error fetching performers:', error);
       }
     };
 
-    fetchEvents();
+    fetchPerformers();
   }, [currentPage]);
 
   const nextPage = () => {
@@ -53,7 +53,7 @@ const EventList = () => {
 
   return (
     <div>
-      <h1>Events</h1>
+      <h1>Performers</h1>
       <p>Page {currentPage} of {totalPages}</p>
       <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
         First Page
@@ -69,8 +69,8 @@ const EventList = () => {
         Last Page
       </button>
       <ListContainer>
-        {events.map(event => (
-          <EventCard key={event.id} event={event} />
+        {performer.map(performer => (
+          <PerformerCard key={performer.id} performer={performer} />
         ))}
       </ListContainer>
     </div>
@@ -84,4 +84,4 @@ const ListContainer = styled.div`
   padding: 20px;
 `;
 
-export default EventList;
+export default PerformerList;

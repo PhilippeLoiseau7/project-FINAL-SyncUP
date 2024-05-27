@@ -3,10 +3,28 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const EventCard = ({ event }) => {
-    const eventDate = new Date(event.datetime_local);
+    
+    const formattedDate = () => {
 
-    const formattedDate = event.datetime_tbd === true ? 'Date TBD - Time TBD' : `${eventDate.toLocaleTimeString()} - ${eventDate.toDateString()}`;
+        if (event.datetime_tbd === true) {
+                return "Date TBD - Time TBD"
+        } else {
+                const eventDate = new Date(event.datetime_local);
+                        const options = { hour: "2-digit", minute: "2-digit" };
 
+                        const formatted = {
+                            weekday: 'short',
+                            month: 'long',
+                            day: 'numeric',
+                            year: eventDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
+                        };
+
+                        const date = eventDate.toLocaleDateString(undefined, formatted);
+                        const time = eventDate.toLocaleTimeString(undefined, options);
+
+                        return `${date} at ${time}`;
+        }   
+    };
 
     return (
         <EventCardLink to={`/events/${event.id}`}>
@@ -15,11 +33,11 @@ const EventCard = ({ event }) => {
                 <EventDetails>
                     <Performer>{event.performers[0]?.name}</Performer>
                     <DateAndTime>
-                    <p>{formattedDate}</p>
+                    <p>{formattedDate()}</p>
                     </DateAndTime>
                     <VenueAndLocation>
                         <p>{event.venue.name}</p>
-                        <p>{event.display_location}</p>
+                        <p>{event.venue.city}, {event.venue.country}</p>
                     </VenueAndLocation>
                 </EventDetails>
             </EventCardContainer>
@@ -40,9 +58,9 @@ const EventCardContainer = styled.div`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     margin: 10px;
-    max-width: 300px;
+    width: 300px;
     transition: transform 0.3s ease;
-
+    height: 350px;
     &:hover {
         transform: translateY(-5px);
     }

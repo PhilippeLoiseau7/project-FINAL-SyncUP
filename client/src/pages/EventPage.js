@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const EventPage = () => {
@@ -24,8 +24,27 @@ const EventPage = () => {
         return <LoadingMessage>Loading event details...</LoadingMessage>;
     }
 
-    const eventDate = new Date(event.datetime_local);
-    const formattedDate = event.datetime_tbd === true ? 'Date TBD - Time TBD' : `${eventDate.toLocaleTimeString()} - ${eventDate.toDateString()}`;
+    const formattedDate = () => {
+
+        if (event.datetime_tbd === true) {
+                return "Date TBD - Time TBD"
+        } else {
+                const eventDate = new Date(event.datetime_local);
+                        const options = { hour: "2-digit", minute: "2-digit" };
+
+                        const formatted = {
+                            weekday: 'long',
+                            month: 'long',
+                            day: 'numeric',
+                            year: eventDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
+                        };
+
+                        const date = eventDate.toLocaleDateString(undefined, formatted);
+                        const time = eventDate.toLocaleTimeString(undefined, options);
+
+                        return `${date} at ${time}`;
+        }
+    }
 
     return (
         <EventPageContainer>
@@ -34,11 +53,13 @@ const EventPage = () => {
                 <EventDetails>
                     <Performer>{event.performers[0]?.name}</Performer>
                     <DateAndTime>
-                        <p>{formattedDate}</p>
+                        <p>{formattedDate()}</p>
                     </DateAndTime>
                     <VenueAndLocation>
                         <p>{event.venue.name}</p>
-                        <p>{event.display_location}</p>
+                        <p>{event.venue.address}, {event.venue.city}, {event.venue.state} </p>
+                        <p>{event.venue.country}</p>
+                        <p>{event.venue.postal_code}</p>
                     </VenueAndLocation>
                 </EventDetails>
             </EventCardContainer>
@@ -46,6 +67,15 @@ const EventPage = () => {
                 <h2>Description</h2>
                 <p>{event.description || 'No description available.'}</p>
             </Description>
+            <Performers>
+                <h2>Performer:</h2>
+                {event.performers.map((performer) => (
+                    <PerformerLink to={`/performer/${performer.id}`} key={performer.id}>
+                        <PerformerImage src={performer.images.huge} alt={performer.name} />
+                        <PerformerName>{performer.name}</PerformerName>
+                    </PerformerLink>
+                ))}
+            </Performers>
             
         </EventPageContainer>
     );
@@ -128,6 +158,50 @@ const Description = styled.div`
 const LoadingMessage = styled.p`
     font-size: 1.2em;
     color: gray;
+`;
+
+const Performers = styled.div`
+background: white;
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+margin-top: 20px;
+padding: 20px;
+max-width: 600px;
+width: 100%;
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+p {
+    color: gray;
+}
+
+`;
+
+const PerformerLink = styled(Link)`
+    display: block;
+    font-size: 1.1em;
+    color: blue;
+    margin-bottom: 5px;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+const PerformerImage = styled.img`
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+`;
+
+const PerformerName = styled.p`
+    font-size: 1.2em;
 `;
 
 export default EventPage;

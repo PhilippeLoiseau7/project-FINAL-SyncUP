@@ -1,25 +1,40 @@
 import React from 'react';
 import styled from "styled-components";
 import { Link } from 'react-router-dom';
+import { useUserProfile } from './UserProfileContext';
 
-const SideNavbar = ({ isOpen, toggleSidebar }) => {
+    const SideNavbar = ({ isOpen, toggleSidebar }) => {
+        const { userProfile } = useUserProfile();
+        const { logout } = useUserProfile();
 
-    return (
-        <SideBarContainer isOpen={isOpen}>
+        const logoutAndtoggleSidebar = () => {
+          logout()
+          toggleSidebar()
+        }
+
+        return (
+          <SideBarContainer isOpen={isOpen}>
             <StyledUnorderedList>
-                <li> <StyledLink to="/" onClick={toggleSidebar}> Home </StyledLink>  </li>
-                <li> <StyledLink to="/events" onClick={toggleSidebar}> Events </StyledLink> </li>
-                <li> <StyledLink to="/performers" onClick={toggleSidebar}> Performers </StyledLink> </li>
-                <li> <StyledLink to="/venues" onClick={toggleSidebar}> Venues </StyledLink> </li> 
-                <li> <StyledLink to="/categories" onClick={toggleSidebar}> Categories </StyledLink> </li>
-                <li> <StyledLink to="/groups" onClick={toggleSidebar}> Groups </StyledLink> </li>
-                <li> <StyledLink to="/profile" onClick={toggleSidebar}> Profile </StyledLink> </li>
-                <li> <StyledLink to="/settings" onClick={toggleSidebar}> Settings </StyledLink> </li>
+              <li> <StyledLink to="/" onClick={toggleSidebar}> Home </StyledLink>  </li>
+              <li> <StyledLink to="/events" onClick={toggleSidebar}> Events </StyledLink> </li>
+              <li> <StyledLink to="/performers" onClick={toggleSidebar}> Performers </StyledLink> </li>
+              {userProfile && (
+                <>
+                  <li> <StyledLink to="/groups" onClick={toggleSidebar}> Groups </StyledLink> </li>
+                  <li> <StyledLink to="/profile" onClick={toggleSidebar}> Profile </StyledLink> </li>
+                  <li> <StyledLink to="/settings" onClick={toggleSidebar}> Settings </StyledLink> </li>
+                  <li> <StyledLink to="/" onClick={logoutAndtoggleSidebar}> Logout </StyledLink> </li>
+                  
+                </>
+              )}
+              {!userProfile && (
+                <li> <StyledLink to="/login" onClick={toggleSidebar}> Login / Sign Up </StyledLink> </li>
+              )}
             </StyledUnorderedList>
-        </SideBarContainer>
-    )
+          </SideBarContainer>
+        );
+      };
 
-};
 
 
 const SideBarContainer = styled.nav`

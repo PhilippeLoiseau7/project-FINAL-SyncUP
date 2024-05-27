@@ -65,8 +65,9 @@ const GetAllEventsNearMe = async (req, res) => {
 
 const GetAllPerformers = async (req, res) => {
   try {
+    const { page = 1, per_page = 15} = req.query;
 
-    const response = await fetch(`${SEATGEEK_API_URL}/performers`, {
+    const response = await fetch(`${SEATGEEK_API_URL}/performers?page=${page}&per_page=${per_page}`, {
       headers: {
         Authorization: `Basic ${encodedAuth}`
       }
@@ -76,10 +77,61 @@ const GetAllPerformers = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    console.error("Error fetching events:", error);
+    console.error("Error fetching performer:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
+const GetPerformer = async (req, res) => {
+
+  try {
+    const { performerId } = req.params;
+    const response = await fetch(`${SEATGEEK_API_URL}/performers/${performerId}`, {
+      headers: {
+        Authorization: `Basic ${encodedAuth}`
+      }
+    });
+
+    const data = await response.json();
+
+    res.status(200).json({ status: 200, performer: data});
+  } catch (error) {
+    console.error("Error fetching performer:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+
+}
+}
+
+const GetEventsByPerformers = async (req, res) => {
+  try {
+    const { performerIds, performerSlugs } = req.query;
+    let url = `${SEATGEEK_API_URL}/events?`;
+
+    if (performerIds) {
+      url += `performers.id=${performerIds}&`;
+    }
+
+    if (performerSlugs) {
+      url += `performers.slug=${performerSlugs}&`;
+    }
+
+    url = url.slice(0, -1);
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Basic ${encodedAuth}`
+      }
+    });
+
+    const data = await response.json();
+    res.status(200).json({ status: 200, events: data.events, meta: data.meta });
+  } catch (error) {
+    console.error("Error fetching events by performers:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 const GetAllVenues = async (req, res) => {
   try {
 
@@ -97,6 +149,8 @@ const GetAllVenues = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
+
 const GetAllCategories = async (req, res) => {
   try {
 
@@ -115,6 +169,24 @@ const GetAllCategories = async (req, res) => {
   }
 }
 
+const SearchEvents = async (req, res) => {
+  try {
+    const { q, page = 1, per_page = 15 } = req.query;
+    const response = await fetch(`${SEATGEEK_API_URL}/events?q=${q}&page=${page}&per_page=${per_page}`, {
+      headers: {
+        Authorization: `Basic ${encodedAuth}`
+      }
+    });
+
+    const data = await response.json();
+
+    res.status(200).json({ status: 200, events: data.events, meta: data.meta });
+  } catch (error) {
+    console.error("Error searching events:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 
-module.exports = { GetAllEvents, GetEvent, GetAllEventsNearMe, GetAllPerformers, GetAllVenues, GetAllCategories };
+
+module.exports = { GetAllEvents, GetEvent, GetAllEventsNearMe, GetAllPerformers, GetPerformer, GetEventsByPerformers, GetAllVenues, GetAllCategories, SearchEvents };
