@@ -3,7 +3,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const seatGeekHandler = require("./handlers/seatGeek")
-const { addUserToDatabase, loginUser } = require("./handlers/users")
+const userHandlers = require("./handlers/users")
+const groupHandlers = require("./handlers/groups")
 const PORT = 4000;
 
 const app = express()
@@ -37,8 +38,17 @@ const app = express()
 
 
   //Handler for user management
-  app.post("/api/register", addUserToDatabase)
-  app.post("/api/login", loginUser)
+  app.post("/api/register", userHandlers.addUserToDatabase)
+  app.post("/api/login", userHandlers.loginUser)
+
+  //Handlers for group management
+  app.get("/api/groups", groupHandlers.getGroups)
+  app.get("/api/groups-joined", groupHandlers.getGroupsJoined)
+  app.post("/api/create_group", groupHandlers.createGroup)
+  app.delete("/api/groups/:groupId", groupHandlers.deleteGroup)
+  app.put("/api/groups/:groupId", groupHandlers.updateGroup)
+  app.post("/api/groups/:groupId/comments", groupHandlers.addComment)
+  app.post("/api/groups/:groupId/join", groupHandlers.joinGroup)
 
   .listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

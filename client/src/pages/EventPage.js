@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { useUserProfile } from '../components/UserProfileContext';
+import GroupList from '../components/GroupsList';
 
 const EventPage = () => {
     const { eventId } = useParams();
     const [event, setEvent] = useState(null);
+    const { userProfile } = useUserProfile();
+    const [newGroupName, setNewGroupName] = useState('');
+    const [showCreateGroupForm, setShowCreateGroupForm] = useState(false);
 
     useEffect(() => {
         const fetchEvent = async () => {
@@ -18,11 +23,43 @@ const EventPage = () => {
         };
 
         fetchEvent();
+
     }, [eventId]);
 
     if (!event) {
         return <LoadingMessage>Loading event details...</LoadingMessage>;
     }
+
+    const handleCreateGroup = async () => {
+        try {
+            const response = await fetch('/api/create_group', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    eventId: eventId,
+                    groupName: newGroupName,
+                    createdByUsername: userProfile.username,
+                    event: event.title,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create group');
+            }
+
+            setNewGroupName('');
+            setShowCreateGroupForm(false);
+            
+        } catch (error) {
+            console.error('Error creating group:', error);
+        }
+    };
+
+    
+
+
 
     const formattedDate = () => {
 
@@ -51,7 +88,7 @@ const EventPage = () => {
             <EventCardContainer>
                 <Thumbnail src={event.performers[0]?.images?.huge} alt={event.title} />
                 <EventDetails>
-                    <Performer>{event.performers[0]?.name}</Performer>
+                    <EventTitle>{event.title}</EventTitle>
                     <DateAndTime>
                         <p>{formattedDate()}</p>
                     </DateAndTime>
@@ -76,7 +113,32 @@ const EventPage = () => {
                     </PerformerLink>
                 ))}
             </Performers>
-            
+            {userProfile && (
+                <>
+            <div>
+                <GroupList eventId={eventId}></GroupList>
+            </div>
+            <CreateGroupButton onClick={() => setShowCreateGroupForm(true)}>Create a Group</CreateGroupButton>
+            {showCreateGroupForm && (
+                <ModalContainer>
+                    <ModalContent>
+                        <h2>Create a Group</h2>
+                        <form onSubmit={handleCreateGroup}>
+                            <label>Group Name:</label>
+                            <input
+                                type="text"
+                                value={newGroupName}
+                                onChange={(e) => setNewGroupName(e.target.value)}
+                                required
+                            />
+                            <button type="submit">Create Group</button>
+                        </form>
+                        <CloseButton onClick={() => setShowCreateGroupForm(false)}>Close</CloseButton>
+                    </ModalContent>
+                </ModalContainer>
+            )}
+            </>
+        )}
         </EventPageContainer>
     );
 };
@@ -113,7 +175,7 @@ const EventDetails = styled.div`
     flex: 1;
 `;
 
-const Performer = styled.div`
+const EventTitle = styled.div`
     font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 10px;
@@ -203,5 +265,82 @@ const PerformerImage = styled.img`
 const PerformerName = styled.p`
     font-size: 1.2em;
 `;
+
+const ModalContainer = styled.div`
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const ModalContent = styled.div`
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+`;
+
+const CloseButton = styled.button`
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+
+    &:hover {
+        background-color: #c82333;
+    }
+`;
+
+const CreateGroupButton = styled.button`
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor:`
 
 export default EventPage;

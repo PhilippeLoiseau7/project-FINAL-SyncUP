@@ -7,14 +7,20 @@ export const useUserProfile = () => {
 };
 
 export const UserProfileProvider = ({ children }) => {
-  const [userProfile, setUserProfile] = useState(null);
+
+  const [userProfile, setUserProfile] = useState(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    return savedProfile ? JSON.parse(savedProfile) : null;
+  });
 
   const login = (userData) => {
     setUserProfile(userData);
+    localStorage.setItem('userProfile', JSON.stringify(userData));
   };
 
   const logout = () => {
     setUserProfile(null);
+    localStorage.removeItem('userProfile');
   };
 
   return (

@@ -33,7 +33,7 @@ const addUserToDatabase = async (req, res) => {
           password,
         });
   
-        return res.status(201).json({ status: 201, message: "User registered successfully", username: username });
+        return res.status(201).json({ status: 201, message: "User registered successfully", username: username, userId });
       }
     } catch (error) {
       console.error("Error registering account:", error);
@@ -59,7 +59,7 @@ const loginUser = async (req, res) => {
       }
   
       
-      return res.status(200).json({ status: 200, message: "Login successful", username: user.username });
+      return res.status(200).json({ status: 200, message: "Login successful", username: user.username, userId: user._id});
   
     } catch (error) {
       console.error("Error logging in:", error);

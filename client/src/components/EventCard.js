@@ -31,7 +31,7 @@ const EventCard = ({ event }) => {
             <EventCardContainer>
                 <Thumbnail src={event.performers[0]?.images?.huge} alt={event.title} />
                 <EventDetails>
-                    <Performer>{event.performers[0]?.name}</Performer>
+                    <h1>{event.title}</h1>
                     <DateAndTime>
                     <p>{formattedDate()}</p>
                     </DateAndTime>
@@ -60,7 +60,7 @@ const EventCardContainer = styled.div`
     margin: 10px;
     width: 300px;
     transition: transform 0.3s ease;
-    height: 350px;
+    height: 380px;
     &:hover {
         transform: translateY(-5px);
     }
@@ -76,10 +76,15 @@ const Thumbnail = styled.img`
 
 const EventDetails = styled.div`
     padding: 10px;
+    h1 {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
 `;
 
 const Performer = styled.div`
-    font-size: 1.2em;
+    font-size: 0.8em;
     font-weight: bold;
     margin-bottom: 5px;
 `;
