@@ -61,11 +61,12 @@ const CenteredContent = styled.div`
   align-items: center;
   input {
     border-radius: 25px;
-    font-size: 25px;
-    height: 55px;
+    font-size: 30px;
+    height: 60px;
     &::placeholder {
-      font-size: 1rem;
-      padding-left: 40px;
+      font-size: 1.2rem;
+      padding-left: 45px;
+      padding-bottom: 40px;
     }
   }
 `;

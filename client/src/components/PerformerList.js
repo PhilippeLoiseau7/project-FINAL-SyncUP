@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PerformerCard from './PerformerCard';
+import { IoMdSkipBackward, IoMdSkipForward } from "react-icons/io";
+import { IoCaretBackSharp, IoCaretForwardSharp } from "react-icons/io5";
 
 const PerformerList = () => {
   const [performer, setPerformer] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     const fetchPerformers = async () => {
@@ -16,6 +19,8 @@ const PerformerList = () => {
         setTotalPages(Math.ceil(data.meta.total / data.meta.per_page));
       } catch (error) {
         console.error('Error fetching performers:', error);
+      } finally {
+        setIsLoading(false); 
       }
     };
 
@@ -52,36 +57,148 @@ const PerformerList = () => {
   };
 
   return (
-    <div>
-      <h1>Performers</h1>
-      <p>Page {currentPage} of {totalPages}</p>
-      <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
-        First Page
-      </button>
-      <button onClick={prevPage} disabled={currentPage === 1}>
-        Previous Page
-      </button>
-      {renderPageButtons()}
-      <button onClick={nextPage} disabled={currentPage === totalPages}>
-        Next Page
-      </button>
-      <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
-        Last Page
-      </button>
+    <PerformerListPage>
+      <PerformerPageinfo>
+        <h1>Performers</h1>
+          <p>Page {currentPage} of {totalPages}</p>
+      </PerformerPageinfo>
+      
+      <AllPageButtons>
+        <NavigationButton
+          onClick={() => setCurrentPage(1)}
+          disabled={currentPage === 1 }
+        >
+          <IoMdSkipBackward />
+        </NavigationButton>
+        <NavigationButton onClick={prevPage} disabled={currentPage === 1 }>
+          <IoCaretBackSharp />
+        </NavigationButton>
+        {renderPageButtons()}
+        <NavigationButton onClick={nextPage} disabled={currentPage === totalPages }>
+          <IoCaretForwardSharp />
+        </NavigationButton>
+        <NavigationButton
+          onClick={() => setCurrentPage(totalPages)}
+          disabled={currentPage === totalPages }
+        >
+          <IoMdSkipForward />
+        </NavigationButton>
+      </AllPageButtons>
+
+      {isLoading ? (
+        <LoadingContainer>Loading...</LoadingContainer>
+      ) : (
+
       <ListContainer>
         {performer.map(performer => (
           <PerformerCard key={performer.id} performer={performer} />
         ))}
       </ListContainer>
-    </div>
+
+      )}
+
+      <AllPageButtons>
+        <NavigationButton
+          onClick={() => setCurrentPage(1)}
+          disabled={currentPage === 1 }
+        >
+          <IoMdSkipBackward />
+        </NavigationButton>
+        <NavigationButton onClick={prevPage} disabled={currentPage === 1 }>
+          <IoCaretBackSharp />
+        </NavigationButton>
+        {renderPageButtons()}
+        <NavigationButton onClick={nextPage} disabled={currentPage === totalPages }>
+          <IoCaretForwardSharp />
+        </NavigationButton>
+        <NavigationButton
+          onClick={() => setCurrentPage(totalPages)}
+          disabled={currentPage === totalPages }
+        >
+          <IoMdSkipForward />
+        </NavigationButton>
+      </AllPageButtons>
+
+      <PerformerPageinfo>
+        <p>Page {currentPage} of {totalPages}</p>
+      </PerformerPageinfo>
+
+    </PerformerListPage>
   );
 };
+
+const PerformerListPage = styled.div`
+
+`
 
 const ListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   padding: 20px;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+`;
+
+const PerformerPageinfo = styled.div`
+
+h1 {
+  font-size: 30px;
+  padding-top: 10px;
+  text-align: center;
+}
+
+p{
+  font-size: 20px;
+  text-align: center;
+}
+
+`
+
+const AllPageButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 10px 0;
+  gap: 10px;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    border-radius: 25px;
+    border: none;
+    height: 40px;
+    width: 60px;
+    align-items: center;
+    &:hover {
+      cursor: pointer;
+    }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+`;
+
+
+
+const NavigationButton = styled.button`
+  
+ 
+`;
+
+const PageButton = styled.button`
+  
+  
 `;
 
 export default PerformerList;

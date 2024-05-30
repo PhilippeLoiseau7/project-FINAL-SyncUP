@@ -40,38 +40,38 @@ const RegisterPage = () => {
   return (
     <RegisterPageContainer>
       <RegisterForm onSubmit={handleRegister}>
-        <label>
+        <InputLabel>
           Username:
-          <input
+          <Input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </label>
-        <label>
+        </InputLabel>
+        <InputLabel>
           Email:
-          <input
+          <Input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </label>
-        <label>
+        </InputLabel>
+        <InputLabel>
           Password:
-          <input
+          <Input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </label>
+        </InputLabel>
+        <RegisterButton type="submit">Register</RegisterButton>
         {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
-        <button type="submit">Register</button>
-        <p>
+        <LoginText>
           Already have an account? <Link to="/login">Login here</Link>
-        </p>
+        </LoginText>
       </RegisterForm>
     </RegisterPageContainer>
   );
@@ -87,42 +87,51 @@ const RegisterPageContainer = styled.div`
 const RegisterForm = styled.form`
   display: flex;
   flex-direction: column;
-  width: 300px;
-  padding: 20px;
-  border: 1px solid #ccc;
+  justify-content: center;
+  width: 500px;
+  height: 500px;
+  padding: 30px;
+  border: 1px solid black;
   border-radius: 5px;
+`;
 
-  label {
-    margin-bottom: 10px;
-  }
+const InputLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+`;
 
-  input {
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    font-size: 1rem;
-  }
+const Input = styled.input`
+  padding: 10px; 
+  border: 1px solid black;
+  border-radius: 3px;
+  font-size: 1.1rem;
+`;
 
-  button {
-    padding: 10px 15px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
+const RegisterButton = styled.button`
+  padding: 12px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1.1rem;
 
-  button:hover {
-    background-color: #218838;
+  &:hover {
+    background-color: #454545 ;
   }
 `;
 
 const ErrorText = styled.p`
   color: red;
-  font-size: 0.875rem;
-  margin: 5px 0 15px;
+  font-size: 1rem;
+  margin-top: 20px; 
+`;
+
+const LoginText = styled.p`
+  margin-top: 20px;
+  font-size: 1rem;
 `;
 
 export default RegisterPage;

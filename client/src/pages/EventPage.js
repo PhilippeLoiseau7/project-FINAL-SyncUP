@@ -45,6 +45,8 @@ const EventPage = () => {
                     groupName: newGroupName,
                     createdByUsername: userProfile.username,
                     event: event.title,
+                    dateAndTime: new Date(event.datetime_local),
+                    cityAndCountry: `${event.venue.city}, ${event.venue.country}`
                 }),
             });
 
@@ -63,25 +65,37 @@ const EventPage = () => {
     
     const formattedDate = () => {
 
-        if (event.datetime_tbd === true) {
-                return "Date TBD - Time TBD"
-        } else {
-                const eventDate = new Date(event.datetime_local);
-                        const options = { hour: "2-digit", minute: "2-digit" };
+        const eventDate = new Date(event.datetime_local);
+        const options = { hour: "2-digit", minute: "2-digit" };
 
-                        const formatted = {
-                            weekday: 'long',
+        const formatted = {
+                            weekday: 'short',
                             month: 'long',
                             day: 'numeric',
                             year: eventDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
                         };
 
-                        const date = eventDate.toLocaleDateString(undefined, formatted);
-                        const time = eventDate.toLocaleTimeString(undefined, options);
+        const date = eventDate.toLocaleDateString(undefined, formatted);
+        const time = eventDate.toLocaleTimeString(undefined, options);
 
-                        return `${date} at ${time}`;
+        if (event.datetime_tbd === true && event.time_tbd === true) {
+
+                return `Date TBD - Time TBD `
+
+        } else if (event.time_tbd === true) {
+
+                return `${date} at Time TBD`;
+
+        } else if (event.datetime_tbd === true) {
+
+                return `Date TBD at ${time} `
+
+        } else {
+
+            return `${date} at ${time}`
+
         }
-    }
+    };
 
     return (
         <EventPageContainer>
@@ -158,7 +172,7 @@ const EventCardContainer = styled.div`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     margin-bottom: 20px;
-    max-width: 600px;
+    max-width: 900px;
     width: 100%;
 `;
 
@@ -204,7 +218,7 @@ const Description = styled.div`
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    max-width: 600px;
+    max-width: 900px;
     width: 100%;
 
     h2 {
@@ -228,7 +242,7 @@ border-radius: 10px;
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 margin-top: 20px;
 padding: 20px;
-max-width: 600px;
+max-width: 900px;
 width: 100%;
 
 h2 {
@@ -237,7 +251,7 @@ h2 {
 }
 
 p {
-    color: gray;
+    color: black;
 }
 
 `;
@@ -245,12 +259,13 @@ p {
 const PerformerLink = styled(Link)`
     display: block;
     font-size: 1.1em;
-    color: blue;
+    color: black;
     margin-bottom: 5px;
     text-decoration: none;
 
     &:hover {
         text-decoration: underline;
+        text-decoration-color: black;
     }
 `;
 
@@ -264,6 +279,7 @@ const PerformerImage = styled.img`
 
 const PerformerName = styled.p`
     font-size: 1.2em;
+    color: black;
 `;
 
 const ModalContainer = styled.div`
@@ -336,11 +352,15 @@ const CloseButton = styled.button`
 `;
 
 const CreateGroupButton = styled.button`
-    background-color: #007bff;
+    background-color: black;
     color: white;
     border: none;
-    padding: 8px 16px;
+    font-size: 18px;
+    margin-top: 30px;
+    padding: 15px 40px;
     border-radius: 4px;
-    cursor:`
+    &:hover {
+        cursor: pointer;
+    }`
 
 export default EventPage;

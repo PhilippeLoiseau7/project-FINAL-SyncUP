@@ -38,31 +38,45 @@ const GroupsPage = () => {
     }
 
     return (
-        <GroupsContainer>
-            <h1>Groups You're a Member Of</h1>
-            {groups.length === 0 ? (
-                <NoGroupsMessage>You are not a member of any groups.</NoGroupsMessage>
-            ) : (
-                <GroupList>
-                    {groups.map((group) => (
-                        <GroupLink key={group._id} to={`/group/${group._id}`}>
-                            <GroupItem>
-                                <GroupName>{group.groupName}</GroupName>
-                                <p>Created by: {group.createdBy}</p>
-                                <p>Members: {group.members.length}</p>
-                            </GroupItem>
-                        </GroupLink>
-                    ))}
-                </GroupList>
-            )}
-        </GroupsContainer>
+        <GroupsPageContainer>
+            <h1>Groups Joined:</h1>
+            <GroupListContainer>
+                {groups.length === 0 ? (
+                    <NoGroupsMessage>You are not a member of any groups.</NoGroupsMessage>
+                ) : (
+                    <GroupList>
+                        {groups.map((group) => (
+                            <GroupLink key={group._id} to={`/group/${group._id}`}>
+                                <GroupItem>
+                                    <GroupName>{group.groupName}</GroupName>
+                                    <p>Created by: {group.createdBy}</p>
+                                    <p>Members: {group.members.length}</p>
+                                </GroupItem>
+                            </GroupLink>
+                        ))}
+                    </GroupList>
+                )}
+            </GroupListContainer>
+        </GroupsPageContainer>
     );
 };
 
-const GroupsContainer = styled.div`
+const GroupsPageContainer = styled.div`
+    padding-top: 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 20px;
+
+    h1 {
+        font-size: 2rem;
+    }
+`;
+
+const GroupListContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
     margin: 20px;
 `;
 
@@ -86,22 +100,29 @@ const NoGroupsMessage = styled.p`
 
 const GroupList = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
 `;
 
 const GroupLink = styled(Link)`
     text-decoration: none;
     color: black;
-    width: 100%;
-    max-width: 600px;
+    width: 400px;
+    margin: 10px;
+    transition: transform 0.3s ease;
+    &:hover {
+        transform: translateY(-10px);
+    }
 `;
 
 const GroupItem = styled.div`
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 10px;
+    border: black solid 1px;
+    margin: 20px;
     padding: 20px;
     width: 100%;
 `;

@@ -30,7 +30,7 @@ const Banner = ({ isOpen, toggleSidebar }) => {
 };
 
 const BannerContainer = styled.div`
-    background-color: #333;
+    background-color: black;
     color: white;
     padding: 10px;
     position: fixed;
@@ -71,6 +71,9 @@ const LeftSideBanner = styled.div`
 
 const RightSideBanner = styled.div`
     display: flex;
+    p {
+        font-size: 30px;
+    }
 `;
 
 export default Banner;

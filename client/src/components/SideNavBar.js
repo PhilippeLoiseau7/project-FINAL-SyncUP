@@ -21,8 +21,6 @@ import { useUserProfile } from './UserProfileContext';
               {userProfile && (
                 <>
                   <li> <StyledLink to="/groups" onClick={toggleSidebar}> Groups </StyledLink> </li>
-                  <li> <StyledLink to="/profile" onClick={toggleSidebar}> Profile </StyledLink> </li>
-                  <li> <StyledLink to="/settings" onClick={toggleSidebar}> Settings </StyledLink> </li>
                   <li> <StyledLink to="/" onClick={logoutAndtoggleSidebar}> Logout </StyledLink> </li>
                   
                 </>
@@ -41,7 +39,7 @@ const SideBarContainer = styled.nav`
 
     width: 250px;
     height: 100vh;
-    background-color: #333;
+    background-color: black;
     padding-top: 50px;
     position: fixed;
     top: 0;
@@ -61,7 +59,7 @@ const StyledLink = styled(Link)`
     font-size: 1.2rem;
 
     &:hover {
-    background-color: #575757;
+    background-color: #333333;
     }
 
 `

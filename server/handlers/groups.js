@@ -6,12 +6,14 @@ const { v4: uuidv4 } = require("uuid");
 const createGroup = async (req, res) => { 
     try {
       const db = client.db("event-groups");
-      const { eventId, groupName, createdByUsername, event } = req.body;
+      const { eventId, groupName, createdByUsername, event, dateAndTime, cityAndCountry } = req.body;
       
       const newGroup = {
         _id: uuidv4(),
         eventId,
         event,
+        dateAndTime,
+        cityAndCountry,
         groupName,
         members: [createdByUsername],
         createdBy: createdByUsername,

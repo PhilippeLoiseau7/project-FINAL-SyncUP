@@ -24,9 +24,9 @@ const LoginPage = () => {
         const userData = await response.json();
         setLoginError("");
         login(userData);
-        alert("Successfuly logged in")
+        alert("Successfully logged in");
         navigate("/");
-        console.log(userData)
+        console.log(userData);
       } else {
         const data = await response.json();
         setLoginError(data.message);
@@ -41,29 +41,29 @@ const LoginPage = () => {
   return (
     <LoginPageContainer>
       <LoginForm onSubmit={handleLogin}>
-        <label>
+        <InputLabel>
           Email:
-          <input
+          <Input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </label>
-        <label>
+        </InputLabel>
+        <InputLabel>
           Password:
-          <input
+          <Input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </label>
-        <button type="submit">Login</button>
+        </InputLabel>
+        <LoginButton type="submit">Login</LoginButton>
         {loginError && <ErrorMessage>{loginError}</ErrorMessage>}
-        <p>
-          Don't have an account? <Link to="/register">Sign up here</Link>{" "}
-        </p>
+        <SignupText>
+          Don't have an account? <Link to="/register">Sign up here</Link>
+        </SignupText>
       </LoginForm>
     </LoginPageContainer>
   );
@@ -79,45 +79,51 @@ const LoginPageContainer = styled.div`
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
-  width: 300px;
-  padding: 20px;
-  border: 1px solid #ccc;
+  justify-content: center;
+  width: 500px;
+  height: 400px;
+  padding: 30px;
+  border: 1px solid black;
   border-radius: 5px;
+`;
 
-  label {
-    margin-bottom: 10px;
-  }
+const InputLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+`;
 
-  input {
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    font-size: 1rem;
-  }
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 3px;
+  font-size: 1.1rem;
+`;
 
-  button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
+const LoginButton = styled.button`
+  padding: 12px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1.1rem;
 
-  button:hover {
-    background-color: #0056b3;
-  }
-
-  p {
-    margin-top: 10px;
-    font-size: 0.9rem;
+  &:hover {
+    background-color: #454545;
   }
 `;
 
 const ErrorMessage = styled.p`
   color: red;
+  margin-top: 20px;
+  font-size: 1rem; 
+`;
+
+const SignupText = styled.p`
+  margin-top: 40px;
+  font-size: 1rem; 
 `;
 
 export default LoginPage;

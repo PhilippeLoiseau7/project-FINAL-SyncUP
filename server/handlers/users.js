@@ -3,7 +3,6 @@ const { v4: uuidv4 } = require("uuid");
 
 const addUserToDatabase = async (req, res) => {
     try {
-      await client.connect();
       const db = client.db("AdminAccess");
   
       const { email, username, password } = req.body;
@@ -31,15 +30,12 @@ const addUserToDatabase = async (req, res) => {
     } catch (error) {
       console.error("Error registering account:", error);
       res.status(500).json({ error: error.message, data: req.body });
-    } finally {
-      await client.close();
     }
   };
   
 
 const loginUser = async (req, res) => {
     try {
-      await client.connect();
       const db = client.db("AdminAccess");
   
       const { email, password } = req.body;
@@ -48,7 +44,7 @@ const loginUser = async (req, res) => {
       const user = await db.collection("users").findOne({ email });
   
       if (!user || user.password !== password) {
-        return res.status(401).json({ status: 401, message: "Sorry, the information you've entered were incorrect. Please try again." });
+        return res.status(401).json({ status: 401, message: "Sorry, the information you entered is incorrect. Please try again." });
       }
   
       
@@ -57,8 +53,6 @@ const loginUser = async (req, res) => {
     } catch (error) {
       console.error("Error logging in:", error);
       res.status(500).json({ error: error.message, data: req.body });
-    } finally {
-      await client.close();
     }
   };
   

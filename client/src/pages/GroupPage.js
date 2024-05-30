@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useUserProfile } from '../components/UserProfileContext';
 
@@ -165,7 +165,7 @@ const GroupPage = () => {
 
             const data = await response.json();
             if (data.status === 200) {
-                navigate('/groups'); // Redirect to the groups list page
+                navigate('/groups');
             } else {
                 console.error('Failed to delete group:', data.message);
             }
@@ -173,6 +173,26 @@ const GroupPage = () => {
             console.error('Error deleting group:', error);
         }
     };
+
+    const formattedDate = () => {
+
+        const eventDate = new Date(group.dateAndTime);
+        const options = { hour: "2-digit", minute: "2-digit" };
+
+        const formatted = {
+                            weekday: 'long',
+                            month: 'long',
+                            day: 'numeric',
+                            year: eventDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
+                        };
+
+        const date = eventDate.toLocaleDateString(undefined, formatted);
+        const time = eventDate.toLocaleTimeString(undefined, options);
+                        
+        return `${date} at ${time}`
+    
+    }
+
 
     if (!group || !event) {
         return <LoadingContainer>Loading...</LoadingContainer>;
@@ -182,7 +202,9 @@ const GroupPage = () => {
         <GroupPageContainer>
             <GroupPageDetails>
                 <GroupName>{group.groupName}</GroupName>
-                <EventTitle>{event.title}</EventTitle>
+                <Event>Event: <EventTitle to={`/events/${group.eventId}`}>{event.title}</EventTitle></Event>
+                <TimeAndPlace>{formattedDate()}, {group.cityAndCountry}</TimeAndPlace>
+                <Admin>Administrator: {group.createdBy}</Admin>
                 <GroupMembers>
                     Members:
                     <ul>
@@ -195,21 +217,26 @@ const GroupPage = () => {
                     <JoinStatusMessage>{joinStatusMessage}</JoinStatusMessage>
                 )}
 
-                {userProfile.username === group.createdBy && (
-                    <DeleteButton onClick={handleDeleteGroup}>Delete Group</DeleteButton>
-                )}
-
                 {isMember ? (
                     <>
                         <CommentSection>
-                            <h2>Chat</h2>
+                            <SentComments>
+                            <h2>Group Chat:</h2>
                             <ul>
                                 {group.comments.map((comment, index) => (
-                                    <li key={`${index}-${comment._id}`}>
-                                        <span>{comment.senderName}:</span> {comment.message} <span>({new Date(comment.sentAt).toLocaleString()})</span>
-                                    </li>
+                                    <CommentListItem key={`${index}-${comment._id}`}>
+                                    <CommentSender>
+                                        {comment.senderName}:
+                                    </CommentSender>
+                                    <MessageSent>{comment.message}</MessageSent>
+                                    <MessageSentTime>
+                                        ({new Date(comment.sentAt).toLocaleString()})
+                                    </MessageSentTime>
+                                </CommentListItem>
                                 ))}
                             </ul>
+                            </SentComments>
+
                             {commentStatusMessage && (
                                 <CommentStatusMessage>{commentStatusMessage}</CommentStatusMessage>
                             )}
@@ -221,8 +248,11 @@ const GroupPage = () => {
                                 />
                                 <CommentButton onClick={handleAddComment}>Send</CommentButton>
                             </CommentForm>
+                            </CommentSection>
                             <LeaveButton onClick={handleLeaveGroup}>Leave Group</LeaveButton>
-                        </CommentSection>
+                            {userProfile.username === group.createdBy && (
+                    <DeleteButton onClick={handleDeleteGroup}>Delete Group</DeleteButton>
+                )}
                     </>
                 ) : (
                     <JoinButton onClick={handleJoinGroup}>Join Group</JoinButton>
@@ -231,6 +261,8 @@ const GroupPage = () => {
         </GroupPageContainer>
     );
 };
+
+
 
 const GroupPageContainer = styled.div`
     display: flex;
@@ -257,15 +289,40 @@ const GroupName = styled.h1`
     margin-bottom: 10px;
 `;
 
+const Admin = styled.div`
+font-size: 1.8rem;
+color: black;
+margin-bottom: 10px;
+margin-top: 20px;
+`
+
 const GroupMembers = styled.div`
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: black;
+    margin: 20px 0px;
+
+    ul{
+        margin-top: 15px;
+        font-size: 1.3rem;
+    }
 `;
 
-const EventTitle = styled.h2`
+const Event = styled.span`
     font-size: 2rem;
+`
+const EventTitle = styled(Link)`
+    font-size: 2rem;
+    text-decoration: none;
+    color: black;
+    &:hover {
+        text-decoration: underline;
+    }
 `;
+
+const TimeAndPlace = styled.h3`
+    margin-top: 10px;
+    font-size: 1.5rem;
+`
 
 const LoadingContainer = styled.div`
     display: flex;
@@ -298,6 +355,7 @@ const LeaveButton = styled.button`
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 30px;
     transition: background-color 0.3s ease;
 
     &:hover {
@@ -354,7 +412,7 @@ const CommentButton = styled.button`
     align-self: flex-end;
     font-size: 1rem;
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: black;
     color: white;
     border: none;
     border-radius: 5px;
@@ -362,8 +420,44 @@ const CommentButton = styled.button`
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: #0056b3;
+        background-color: grey;
     }
+`;
+
+const SentComments = styled.div`
+    margin-top: 20px;
+    width: 100%;
+    border: 1px black solid;
+    border-radius: 20px;
+    h2 {
+        padding: 20px 20px 0px 20px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    ul{
+        padding: 20px;
+    }
+`;
+
+const CommentListItem = styled.li`
+    margin-bottom: 20px;
+    
+`;
+
+const CommentSender = styled.span`
+font-size: 1rem;
+padding-right: 8px;
+
+`
+
+const MessageSent = styled.span`
+    font-size: 1rem;
+    padding-right: 6px;
+`;
+
+const MessageSentTime = styled.span`
+    font-size: 0.800rem;
+    color: #666;
 `;
 
 export default GroupPage;

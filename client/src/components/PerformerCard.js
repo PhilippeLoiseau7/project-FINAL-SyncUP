@@ -34,7 +34,7 @@ const PerformerCardContainer = styled.div`
     transition: transform 0.3s ease;
     height: 300px;
     &:hover {
-        transform: translateY(-5px);
+        transform: translateY(-10px);
     }
 `;
 

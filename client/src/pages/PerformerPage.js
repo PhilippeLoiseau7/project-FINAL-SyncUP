@@ -71,13 +71,13 @@ const PerformerPage = () => {
                 </PerformerDetails>
             </PerformerCardContainer>
             <PerformerUpcomingEventsContainer>
-                <h1>Upcoming Events</h1>
+                <h2>Upcoming Events:</h2>
                 {upcomingEvents.length === 0 ? (
                     <LoadingMessage>No upcoming events found for this performer.</LoadingMessage>
                 ) : (
                     upcomingEvents.map((event) => (
                         <EventCard to={`/events/${event.id}`} key={event.id} >
-                            <h2>{event.title}</h2>
+                            <h3>{event.title}</h3>
                             <DateAndTime>
                                 <p>{formattedDate(event.datetime_local)}</p>
                             </DateAndTime>
@@ -121,7 +121,8 @@ const Thumbnail = styled.img`
 
 const PerformerDetails = styled.div`
     padding: 20px;
-    flex: 1;
+    text-align: center;
+
 `;
 
 const PerformerName = styled.div`
@@ -131,6 +132,7 @@ const PerformerName = styled.div`
 `;
 
 const PerformerUpcomingEventsContainer = styled.div`
+
     display: flex;
     flex-direction: column;
     background: white;
@@ -140,6 +142,12 @@ const PerformerUpcomingEventsContainer = styled.div`
     margin-bottom: 20px;
     max-width: 1000px;
     width: 100%;
+
+    h2 {
+        font-size: 30px;
+        text-align: center;
+        margin: 15px 0px;
+    }
 `;
 
 const EventCard = styled(Link)`
@@ -148,8 +156,15 @@ const EventCard = styled(Link)`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 20px;
+    margin: 20px 25px;
     text-decoration: none;
     color: black;
+    border: 1.5px solid black;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-7px);
+    }
 `;
 
 const DateAndTime = styled.div`

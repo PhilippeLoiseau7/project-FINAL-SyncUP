@@ -6,10 +6,7 @@ const EventCard = ({ event }) => {
     
     const formattedDate = () => {
 
-        if (event.datetime_tbd === true) {
-                return "Date TBD - Time TBD"
-        } else {
-                const eventDate = new Date(event.datetime_local);
+        const eventDate = new Date(event.datetime_local);
                         const options = { hour: "2-digit", minute: "2-digit" };
 
                         const formatted = {
@@ -22,8 +19,23 @@ const EventCard = ({ event }) => {
                         const date = eventDate.toLocaleDateString(undefined, formatted);
                         const time = eventDate.toLocaleTimeString(undefined, options);
 
-                        return `${date} at ${time}`;
-        }   
+        if (event.datetime_tbd === true && event.time_tbd === true) {
+
+                return `Date TBD - Time TBD `
+
+        } else if (event.time_tbd === true) {
+
+                return `${date} at Time TBD`;
+
+        } else if (event.datetime_tbd === true) {
+
+                return `Date TBD at ${time} `
+
+        } else {
+
+            return `${date} at ${time}`
+
+        }
     };
 
     return (
@@ -62,7 +74,7 @@ const EventCardContainer = styled.div`
     transition: transform 0.3s ease;
     height: 380px;
     &:hover {
-        transform: translateY(-5px);
+        transform: translateY(-10px);
     }
 `;
 

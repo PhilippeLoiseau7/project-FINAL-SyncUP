@@ -31,13 +31,14 @@ const GroupCardContainer = styled.div`
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid black;
     overflow: hidden;
     margin: 10px;
     width: 300px;
     transition: transform 0.3s ease;
     height: 150px;
     &:hover {
-        transform: translateY(-5px);
+        transform: translateY(-10px);
     }
 `;
 
@@ -45,12 +46,18 @@ const GroupDetails = styled.div`
     padding: 10px;
     text-align: center;
     font-size: 17px;
+
+    p {
+        margin-top: 30px;
+    }
 `;
 
 const Group = styled.div`
     font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin: 10px 0px;
+    text-decoration: underline;
+    text-decoration-color: black;
 `;
 
 export default GroupCard

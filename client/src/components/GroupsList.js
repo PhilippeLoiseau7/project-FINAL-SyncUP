@@ -30,7 +30,7 @@ const GroupList = ({ eventId }) => {
   }, [eventId]);
 
   return (
-    <div>
+    <GroupListContainer>
       <h1>Existing groups for this event:</h1>
       {isLoading ? (
         <LoadingContainer>Loading...</LoadingContainer>
@@ -45,12 +45,26 @@ const GroupList = ({ eventId }) => {
           )}
         </ListContainer>
       )}
-    </div>
+    </GroupListContainer>
   );
 };
 
+const GroupListContainer = styled.div`
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 900px;
+  
+  h1 {
+    font-size: 1.5em;
+    text-align: center;
+  }
+`
+
 const ListContainer = styled.div`
   display: flex;
+  flow-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   padding: 20px;
@@ -60,7 +74,7 @@ const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px; /* Adjust height as needed */
+  height: 200px;
   font-size: 1.2rem;
 `;
 
