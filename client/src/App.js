@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage"
 import SettingsPage from "./pages/SettingsPage";
+import GroupPage from "./pages/GroupPage";
 import GroupsPage from "./pages/GroupsPage";
 import GlobalStyle from "./styles/globalStyles";
 
@@ -56,7 +57,7 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/groups" element={<GroupsPage />} />
-            <Route path="/group/:groupeId" element={<GroupsPage />} />
+            <Route path="/group/:groupId" element={<GroupPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>

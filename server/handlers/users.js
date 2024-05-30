@@ -1,14 +1,5 @@
-const { MongoClient } = require("mongodb");
+const { client } = require("./mongoClientConnection"); // Replace with your actual module path
 const { v4: uuidv4 } = require("uuid");
-require("dotenv").config();
-const { MONGO_URI } = process.env;
-
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-};
-
-const client = new MongoClient(MONGO_URI, options);
 
 const addUserToDatabase = async (req, res) => {
     try {
@@ -17,11 +8,13 @@ const addUserToDatabase = async (req, res) => {
   
       const { email, username, password } = req.body;
   
-      const existingUser = await db.collection("users").findOne({ email });
+      const existingUser = await db.collection('users').findOne({ $or: [{ username }, { email }] });
+
   
       if (existingUser) {
-        return res.status(400).json({ status: 400, message: "Email is already being used by another user" });
-      } else {
+        return res.status(400).json({ message: 'Username or email already in use' });
+      }
+      else {
         
         const userId = uuidv4();
   
@@ -55,7 +48,7 @@ const loginUser = async (req, res) => {
       const user = await db.collection("users").findOne({ email });
   
       if (!user || user.password !== password) {
-        return res.status(401).json({ status: 401, message: "Invalid credentials" });
+        return res.status(401).json({ status: 401, message: "Sorry, the information you've entered were incorrect. Please try again." });
       }
   
       

@@ -8,6 +8,7 @@ const EventPage = () => {
     const { eventId } = useParams();
     const [event, setEvent] = useState(null);
     const { userProfile } = useUserProfile();
+    const [loading, setLoading] = useState(true);
     const [newGroupName, setNewGroupName] = useState('');
     const [showCreateGroupForm, setShowCreateGroupForm] = useState(false);
 
@@ -19,6 +20,8 @@ const EventPage = () => {
                 setEvent(data.events);
             } catch (error) {
                 console.error('Error fetching event:', error);
+            } finally{
+                setLoading(false)
             }
         };
 
@@ -26,7 +29,7 @@ const EventPage = () => {
 
     }, [eventId]);
 
-    if (!event) {
+    if (loading === true) {
         return <LoadingMessage>Loading event details...</LoadingMessage>;
     }
 
@@ -58,9 +61,6 @@ const EventPage = () => {
     };
 
     
-
-
-
     const formattedDate = () => {
 
         if (event.datetime_tbd === true) {

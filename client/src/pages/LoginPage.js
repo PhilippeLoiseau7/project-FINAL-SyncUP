@@ -22,10 +22,10 @@ const LoginPage = () => {
       });
       if (response.ok) {
         const userData = await response.json();
-        login(userData);
         setLoginError("");
-        navigate("/");
+        login(userData);
         alert("Successfuly logged in")
+        navigate("/");
         console.log(userData)
       } else {
         const data = await response.json();

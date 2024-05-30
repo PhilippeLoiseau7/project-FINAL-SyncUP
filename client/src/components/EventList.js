@@ -6,9 +6,11 @@ const EventList = () => {
   const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     const fetchEvents = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`/api/events?page=${currentPage}`);
         const data = await response.json();
@@ -16,6 +18,8 @@ const EventList = () => {
         setTotalPages(Math.ceil(data.meta.total / data.meta.per_page));
       } catch (error) {
         console.error('Error fetching events:', error);
+      } finally {
+        setIsLoading(false); 
       }
     };
 
@@ -68,11 +72,15 @@ const EventList = () => {
       <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
         Last Page
       </button>
-      <ListContainer>
-        {events.map(event => (
-          <EventCard key={event.id} event={event} />
-        ))}
-      </ListContainer>
+      {isLoading ? (
+        <LoadingContainer>Loading...</LoadingContainer>
+      ) : (
+        <ListContainer>
+          {events.map(event => (
+            <EventCard key={event.id} event={event} />
+          ))}
+        </ListContainer>
+      )}
     </div>
   );
 };
@@ -82,6 +90,14 @@ const ListContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   padding: 20px;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust height as needed */
+  font-size: 1.2rem;
 `;
 
 export default EventList;

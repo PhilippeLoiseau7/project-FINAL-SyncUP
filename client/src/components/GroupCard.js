@@ -10,6 +10,10 @@ const GroupCard = ({ group }) => {
             <GroupCardContainer>
                 <GroupDetails>
                     <Group>{group.groupName}</Group>
+                    <p>
+                        {group.members.length}{" "}
+                        {group.members.length === 1 ? "member" : "members"}
+                    </p>
                 </GroupDetails>
             </GroupCardContainer>
         </GroupCardLink>
@@ -31,7 +35,7 @@ const GroupCardContainer = styled.div`
     margin: 10px;
     width: 300px;
     transition: transform 0.3s ease;
-    height: 300px;
+    height: 150px;
     &:hover {
         transform: translateY(-5px);
     }

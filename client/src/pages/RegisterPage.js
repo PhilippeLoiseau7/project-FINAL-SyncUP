@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 import { useUserProfile } from '../components/UserProfileContext';
 
 const RegisterPage = () => {
@@ -9,11 +9,11 @@ const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -24,14 +24,16 @@ const RegisterPage = () => {
       if (response.ok) {
         const userData = await response.json();
         login(userData);
-        alert("Thank you for signing up, you're successfully logged in")
-        navigate("/");
+        setErrorMessage('');
+        alert("Thank you for signing up, you're successfully logged in");
+        navigate('/');
       } else {
+        const data = await response.json();
+        setErrorMessage(data.message);
         throw new Error('Registration failed');
       }
     } catch (error) {
       console.error('Registration Error:', error);
-      
     }
   };
 
@@ -65,8 +67,11 @@ const RegisterPage = () => {
             required
           />
         </label>
+        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
         <button type="submit">Register</button>
-        <p>Already have an account? <Link to="/login">Login here</Link></p>
+        <p>
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
       </RegisterForm>
     </RegisterPageContainer>
   );
@@ -112,6 +117,12 @@ const RegisterForm = styled.form`
   button:hover {
     background-color: #218838;
   }
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  font-size: 0.875rem;
+  margin: 5px 0 15px;
 `;
 
 export default RegisterPage;
