@@ -324,7 +324,7 @@ const ModalContent = styled.div`
     }
 
     button {
-        background-color: #007bff;
+        background-color: black;
         color: white;
         border: none;
         padding: 8px 16px;
@@ -332,13 +332,13 @@ const ModalContent = styled.div`
         cursor: pointer;
 
         &:hover {
-            background-color: #0056b3;
+            background-color: grey;
         }
     }
 `;
 
 const CloseButton = styled.button`
-    background-color: #dc3545;
+    background-color: black;
     color: white;
     border: none;
     padding: 8px 16px;
